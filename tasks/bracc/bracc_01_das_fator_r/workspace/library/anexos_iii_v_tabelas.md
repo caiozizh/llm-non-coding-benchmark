@@ -14,7 +14,7 @@
 | 5 | 3.600.000,00 | 21,00% | 125.640,00 |
 | 6 | 4.800.000,00 | 33,00% | 648.000,00 |
 
-Repartição, 4ª faixa: IRPJ 4,00% · CSLL 3,50% · COFINS 14,05% · PIS 3,05% · CPP 42,75% · **ISS 32,50%**.
+Repartição, 4ª faixa: IRPJ 4,00% · CSLL 3,50% · COFINS 13,64% · PIS 2,96% · CPP 43,40% · **ISS 32,50%**.
 
 **Anexo V (serviços — Fator R < 28%)**
 
@@ -26,3 +26,7 @@ Repartição, 4ª faixa: IRPJ 4,00% · CSLL 3,50% · COFINS 14,05% · PIS 3,05% 
 | 4 | 1.800.000,00 | 20,50% | 17.100,00 |
 | 5 | 3.600.000,00 | 23,00% | 62.100,00 |
 | 6 | 4.800.000,00 | 30,50% | 540.000,00 |
+
+Repartição, 4ª faixa: IRPJ 21,00% · CSLL 15,00% · COFINS 15,74% · PIS 3,41% · CPP 23,85% · ISS 21,00%.
+
+Os percentuais de repartição são frações do DAS, não alíquotas diretas sobre a receita. Na locação de bens móveis, desconta-se a fração de ISS da alíquota efetiva do Anexo III.
