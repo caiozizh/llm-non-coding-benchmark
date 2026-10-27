@@ -15,9 +15,11 @@
         "abril",
         "em aberto",
         "3.200",
-        "3200"
+        "3200",
+        "extrato",
+        "pagamento"
       ],
-      "answer": "O pró-labore de abril (R$ 1.600 cada sócio, R$ 3.200) foi pago em 30 de abril, mas a contabilidade tirou o resumo com ele 'em aberto' porque eu lancei o PIX no sistema só em maio. Te mando o comprovante de 30/04.",
+      "answer": "Conferi com o financeiro: minha mensagem dizia 06/05, mas essa foi a data do lançamento no sistema. Os pagamentos foram em 30/04 às 17h52/17h53, conforme o extrato de abril, IDs BRACC01-PIX-01 e BRACC01-PIX-02. Cada pró-labore era R$ 1.600 BRUTOS, com INSS retido de R$ 176 e Pix líquido de R$ 1.424. O resumo de folha foi exportado antes dos Pix, às 16h de 30/04, e ainda não incluía o pró-labore de abril. O demonstrativo de pró-labore foi lançado em 06/05.",
       "if_not_asked": "must_flag"
     },
     {
