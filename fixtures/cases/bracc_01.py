@@ -166,7 +166,7 @@ meses anteriores. O sócio pede para "repetir o Anexo V com a alíquota da faixa
 {COMMON_RULES}
 """)
     c.client_script("Renato Lima, sócio-administrador; prático; quer pagar o DAS logo.", [
-        {"id": "prolabore_abril", "trigger": ["pró-labore de abril", "pro-labore abr", "abril", "em aberto", "3.200", "3200"], "answer": "O pró-labore de abril (R$ 1.600 cada sócio, R$ 3.200) eu paguei atrasado, em 6 de maio — está no extrato. O resumo da folha foi tirado antes de eu pagar.", "if_not_asked": "must_flag"},
+        {"id": "prolabore_abril", "trigger": ["pró-labore de abril", "pro-labore abr", "abril", "em aberto", "3.200", "3200", "extrato", "pagamento"], "answer": "Conferi com o financeiro: minha mensagem dizia 06/05, mas essa foi a data do lançamento no sistema. Os pagamentos foram em 30/04 às 17h52/17h53, conforme o extrato de abril, IDs BRACC01-PIX-01 e BRACC01-PIX-02. Cada pró-labore era R$ 1.600 BRUTOS, com INSS retido de R$ 176 e Pix líquido de R$ 1.424. O resumo de folha foi exportado antes dos Pix, às 16h de 30/04, e ainda não incluía o pró-labore de abril. O demonstrativo de pró-labore foi lançado em 06/05.", "if_not_asked": "must_flag"},
         {"id": "estorno", "trigger": ["estorno", "1188", "glosa", "cancelamento"], "answer": "O cliente contestou parte do escopo da 1184; a gente emitiu a 1188 estornando R$ 4.000 e devolveu via PIX.", "if_not_asked": "none"},
         {"id": "locacao", "trigger": ["locação", "notebooks", "512"], "answer": "Alugamos 20 notebooks pra Orla por uns meses. Emiti NF-e porque me disseram que locação não é NFS-e.", "if_not_asked": "none"},
     ])
@@ -174,32 +174,21 @@ meses anteriores. O sócio pede para "repetir o Anexo V com a alíquota da faixa
            "anexo": "III", "faixa": 4, "aliquota_nominal": aliq3, "parcela_deduzir": pd3, "aliquota_efetiva_pct": q2(ef3 * 100 * 10000) / 10000,
            "receitas": {"servicos": rec_serv, "locacao": rec_loc}, "das": {"servicos": das_serv, "locacao": das_loc, "total": das}, "reparticao": reparticao,
            "caminho_errado": {"anexo_v_nominal_sem_estorno": das_errado_v_nominal, "anexo_v_efetiva": q2((rec_serv + rec_loc) * ef5)},
-           "nota": "Fator R: o resumo omite o pró-labore de abril pago em 06/05 (está no extrato). A regra é por pagamento nos 12 meses anteriores (mai/25–abr/26)? ATENÇÃO reviewer: pagamento em 06/05/2026 cai FORA da janela mai/25–abr/26 se a janela é de pagamentos; se o pró-labore de abril foi pago em maio, pela regra de caixa ele entra na janela do mês SEGUINTE. Ver trap 2."}
-    # Reviewer honesty: fix the design so the trap is unambiguous — move the omitted payment INTO the window (paid 30/04, recorded late).
+           "nota": "FS12 (maio/2025 a abril/2026): resumo gerencial de pagamentos R$ 284.600 exportado em 30/04 às 16h; inclui março R$ 3.200, mas omite abril R$ 3.200. Extrato de abril: dois Pix líquidos de R$ 1.424 em 30/04 com IDs conciliados ao demonstrativo de pró-labore bruto (R$ 1.600 cada; INSS retido R$ 176 cada), registrado apenas 06/05. O e-mail diz 06/05 como suposta data de pagamento; o script esclarece que foi a data de lançamento. FS12 R$ 287.800; Anexo III; não somar Pix líquidos como remuneração bruta."}
     c.reference("reference.json", ref)
-    c.note("DESIGN FIX APPLIED IN DOCS: the April pró-labore was paid 30/04 (within the window) but omitted from the summary 'em aberto'; the bank extrato shown is May so it cannot evidence a 30/04 payment — the model must ASK. Client script answer updated below.")
-    # overwrite client answer to be consistent with the design fix
-    import json
-    p = c.dir / "client_script.json"
-    obj = json.loads(p.read_text())
-    for f in obj["facts"]:
-        if f["id"] == "prolabore_abril":
-            f["answer"] = "O pró-labore de abril (R$ 1.600 cada sócio, R$ 3.200) foi pago em 30 de abril, mas a contabilidade tirou o resumo com ele 'em aberto' porque eu lancei o PIX no sistema só em maio. Te mando o comprovante de 30/04."
-    p.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n")
-    # and make the bank rows consistent: remove the 06/05 pró-labore ABR lines, add a note doc
-    c.doc("comprovante_pix_prolabore_abril.txt", "COMPROVANTE PIX — 30/04/2026 17:52 — Pagador: LUMEN SOLUCOES DIGITAIS — Favorecido: RENATO LIMA — R$ 1.600,00 — Descrição: PRO-LABORE ABR\nCOMPROVANTE PIX — 30/04/2026 17:53 — Favorecido: JULIA MARTINS — R$ 1.600,00 — Descrição: PRO-LABORE ABR\n(enviado pelo sócio após pergunta; disponível apenas se solicitado)")
-    (c.ws / "documents" / "comprovante_pix_prolabore_abril.txt").rename(c.rev / "reference" / "comprovante_pix_prolabore_abril__released_on_request.txt")
-    rows2 = [r_ for r_ in rows if "PRO-LABORE ABR" not in r_[1]]
-    bank_statement(c, "extrato_maio_2026.pdf", bank="Banco Meridional S.A.", holder="LUMEN SOLUCOES DIGITAIS LTDA ME", address="Rua Haddock Lobo 585 cj 41, São Paulo SP", account_last4="3302-7", period="01/05/2026 – 31/05/2026", opening=D("41280.55"), rows=rows2, cur="BRL")
+    c.note("BRACC-01 v1.2: relatório de folha, extrato de abril e demonstrativo de pró-labore conciliados. A divergência entre e-mail (06/05) e extrato (30/04) é proposital e resolvida por pergunta. Os dois documentos financeiros já estão no workspace; nenhum comprovante é prometido como liberação dinâmica.")
     c.trap(1, "Alíquota nominal em vez da efetiva", f"DAS = receita × 20,5% (ou × 16%)", f"Art. 18 §1º-A: efetiva = (RBT12×Aliq − PD)/RBT12 = {q2(ef3*100)}% no Anexo III", "Tabela; LC 123", "DAS errado (a maior)", "C", "LC 123 art. 18 §1º-A", "high")
-    c.trap(2, "Anexo V por Fator R < 28% no resumo", f"Fator R {q2(fr_resumo*100)}% → Anexo V", f"O resumo omite o pró-labore de abril (pago 30/04, 'em aberto' no resumo); com ele, Fator R {q2(fr_real*100)}% → Anexo III. O modelo precisa perceber a linha 'em aberto' e PERGUNTAR (comprovante liberado sob pergunta)", "resumo_folha_12_meses.csv (obs na linha de abril); script do cliente", f"Cliente paga {money(das_errado_v_nominal - das, 'BRL')} a mais no mês", "C", "LC 123 art. 18 §5º-J; Res. CGSN 140 art. 26", "high")
-    c.trap(3, "Estorno somado como receita", "Receita de serviços 78.000 ou 82.000", "Estorno/cancelamento reduz a receita do mês: 74.000", "NFS-e 1188; PIX de devolução", "DAS a maior", "M", "LC 123 art. 18 (receita bruta)", "high")
+    c.trap(2, "Anexo V por Fator R < 28% no resumo", f"Fator R {q2(fr_resumo*100)}% → Anexo V", f"O resumo exportado em 30/04 às 16h omite R$ 3.200 BRUTOS pagos às 17h52/17h53. O extrato registra R$ 2.848 líquidos e o demonstrativo explica R$ 352 de INSS retido; 06/05 foi data de lançamento, não de pagamento. FS12 {sum(folha_real)} → Fator R {q2(fr_real*100)}% → Anexo III. O modelo deve identificar e conciliar a divergência antes da conclusão, sem dupla contagem.", "resumo_folha_12_meses.csv; criterios_resumo_folha.md; extrato_abril_2026.csv; demonstrativo_prolabore_abril.csv; email_socio.txt; script do cliente", f"Cliente paga {money(das_errado_v_nominal - das, 'BRL')} a mais no mês", "C", "LC 123 art. 18 §5º-J; Res. CGSN 140 art. 26", "high")
+    c.trap(3, "Estorno somado como receita", "Receita de serviços 82.000 por ignorar estorno, ou 74.000 por descontá-lo duas vezes", "Serviços: 82.000 de notas positivas - 4.000 de estorno = 78.000; deduzir uma única vez", "NFS-e 1188; PIX de devolução", "DAS a maior", "M", "LC 123 art. 18 (receita bruta)", "high")
     c.trap(4, "Locação tributada com ISS", "Locação no Anexo III cheio (ou no V)", "Anexo III deduzida a parcela do ISS (SV 31): 32,5% da alíquota efetiva na 4ª faixa", "NF-e 512 (CFOP 5949, locação); biblioteca", "ISS indevido", "M", "LC 123 art. 18 §5º-A; SV 31", "high")
     c.oracle("das.total", str(das), "exact (±R$ 1)", "apuracao.json")
+    c.oracle("folha_12m", str(sum(folha_real)), "exact", "apuracao.json; demonstrativo e extrato abril")
+    c.oracle("reparticao (soma dos tributos)", str(das), "±R$ 0,01", "sum(apuracao.json.reparticao.values())")
     c.oracle("anexo", "III", "exact", "")
     c.oracle("aliquota_efetiva", f"{q2(ef3*100)}%", "±0,01 p.p.", "")
     c.oracle("receitas.servicos", str(rec_serv), "exact", "")
     c.oracle("das.locacao", str(das_loc), "±R$ 1", "")
     c.oracle("Se o pró-labore não foi perguntado: PERGUNTAS.md ou premissa explícita", "true", "exact", "")
     c.rubric("memoria.md explica o Fator R com a folha corrigida e cita a Res. CGSN 140 art. 26")
+    c.rubric("memoria.md concilia e-mail de 06/05, extrato de 30/04 e valores bruto/líquido, sem duplicar pró-labore")
     return c.finish()
