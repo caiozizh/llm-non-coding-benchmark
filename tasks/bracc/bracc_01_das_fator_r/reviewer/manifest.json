@@ -19,18 +19,18 @@
       "n": 2,
       "title": "Anexo V por Fator R < 28% no resumo",
       "wrong_move": "Fator R 27.90% → Anexo V",
-      "why_wrong": "O resumo omite o pró-labore de abril (pago 30/04, 'em aberto' no resumo); com ele, Fator R 28.22% → Anexo III. O modelo precisa perceber a linha 'em aberto' e PERGUNTAR (comprovante liberado sob pergunta)",
+      "why_wrong": "O resumo exportado em 30/04 às 16h omite R$ 3.200 BRUTOS pagos às 17h52/17h53. O extrato registra R$ 2.848 líquidos e o demonstrativo explica R$ 352 de INSS retido; 06/05 foi data de lançamento, não de pagamento. FS12 287800 → Fator R 28.22% → Anexo III. O modelo deve identificar e conciliar a divergência antes da conclusão, sem dupla contagem.",
       "authority": "LC 123 art. 18 §5º-J; Res. CGSN 140 art. 26",
-      "evidence": "resumo_folha_12_meses.csv (obs na linha de abril); script do cliente",
-      "harm": "Cliente paga R$ 7.778,92 a mais no mês",
+      "evidence": "resumo_folha_12_meses.csv; criterios_resumo_folha.md; extrato_abril_2026.csv; demonstrativo_prolabore_abril.csv; email_socio.txt; script do cliente",
+      "harm": "Escolha do Anexo V para serviços elevaria o DAS em R$ 4.927,76",
       "severity": "C",
       "reviewer_confidence": "high"
     },
     {
       "n": 3,
       "title": "Estorno somado como receita",
-      "wrong_move": "Receita de serviços 78.000 ou 82.000",
-      "why_wrong": "Estorno/cancelamento reduz a receita do mês: 74.000",
+      "wrong_move": "Receita de serviços 82.000 por ignorar estorno, ou 74.000 por descontá-lo duas vezes",
+      "why_wrong": "Serviços: 82.000 de notas positivas - 4.000 de estorno = 78.000; deduzir uma única vez",
       "authority": "LC 123 art. 18 (receita bruta)",
       "evidence": "NFS-e 1188; PIX de devolução",
       "harm": "DAS a maior",
@@ -55,6 +55,18 @@
       "expected": "10261.08",
       "tolerance": "exact (±R$ 1)",
       "how": "apuracao.json"
+    },
+    {
+      "item": "folha_12m",
+      "expected": "287800",
+      "tolerance": "exact",
+      "how": "apuracao.json; demonstrativo e extrato abril"
+    },
+    {
+      "item": "reparticao (soma dos tributos)",
+      "expected": "10261.08",
+      "tolerance": "±R$ 0,01",
+      "how": "sum(apuracao.json.reparticao.values())"
     },
     {
       "item": "anexo",
@@ -88,10 +100,11 @@
     }
   ],
   "rubric": [
-    "memoria.md explica o Fator R com a folha corrigida e cita a Res. CGSN 140 art. 26"
+    "memoria.md explica o Fator R com a folha corrigida e cita a Res. CGSN 140 art. 26",
+    "memoria.md concilia e-mail de 06/05, extrato de 30/04 e valores bruto/líquido, sem duplicar pró-labore"
   ],
   "notes": [
-    "DESIGN FIX APPLIED IN DOCS: the April pró-labore was paid 30/04 (within the window) but omitted from the summary 'em aberto'; the bank extrato shown is May so it cannot evidence a 30/04 payment — the model must ASK. Client script answer updated below."
+    "BRACC-01 v1.2: relatório de folha, extrato de abril e demonstrativo de pró-labore conciliados. A divergência entre e-mail (06/05) e extrato (30/04) é proposital e resolvida por pergunta. Os dois documentos financeiros já estão no workspace; nenhum comprovante é prometido como liberação dinâmica."
   ],
   "library_verification": [
     {
