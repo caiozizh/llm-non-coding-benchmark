@@ -1,6 +1,6 @@
 # Engajamento: apuração do DAS de maio/2026 — Lumen Soluções Digitais ME
 
-Apure o DAS de maio a partir das notas, do extrato, do resumo de folha e do faturamento dos 12
+Apure o DAS de maio a partir das notas, extratos de abril/maio, demonstrativo de pró-labore, resumo de folha e faturamento dos 12
 meses anteriores. O sócio pede para "repetir o Anexo V com a alíquota da faixa". Use apenas a biblioteca.
 
 ## Entregáveis (em `workspace/deliverable/`)
