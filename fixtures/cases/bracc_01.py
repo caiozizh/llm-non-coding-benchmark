@@ -85,13 +85,13 @@ Conferir eventuais pagamentos feitos após o horário da extração.
 """)
     # O extrato de abril é uma evidência visível desde o início, não uma falsa
     # promessa de entrega dinâmica pelo cliente; encerra com o saldo inicial de maio.
-    c.csv("extrato_abril_2026.csv", ["date", "description", "amount", "balance"], [
-        ["2026-04-03", "PIX RECEBIDO CLIENTE ORLA", "11000.00", "65528.55"],
-        ["2026-04-07", "SALARIOS LIQUIDOS - COMP MAR/2026", "-15000.00", "50528.55"],
-        ["2026-04-20", "CPP E FGTS RECOLHIDOS - COMP MAR/2026", "-4700.00", "45828.55"],
-        ["2026-04-25", "INSS RETIDO SALARIOS - COMP MAR/2026", "-1700.00", "44128.55"],
-        ["2026-04-30", "PIX PRO-LABORE ABR RENATO - ID BRACC01-PIX-01", "-1424.00", "42704.55"],
-        ["2026-04-30", "PIX PRO-LABORE ABR JULIA - ID BRACC01-PIX-02", "-1424.00", "41280.55"],
+    c.csv("extrato_abril_2026.csv", ["date", "time", "description", "amount", "balance"], [
+        ["2026-04-03", "10:00", "PIX RECEBIDO CLIENTE ORLA", "11000.00", "65528.55"],
+        ["2026-04-07", "09:30", "SALARIOS LIQUIDOS - COMP MAR/2026", "-15000.00", "50528.55"],
+        ["2026-04-20", "14:00", "CPP E FGTS RECOLHIDOS - COMP MAR/2026", "-4700.00", "45828.55"],
+        ["2026-04-25", "11:00", "INSS RETIDO SALARIOS - COMP MAR/2026", "-1700.00", "44128.55"],
+        ["2026-04-30", "17:52", "PIX PRO-LABORE ABR RENATO - ID BRACC01-PIX-01", "-1424.00", "42704.55"],
+        ["2026-04-30", "17:53", "PIX PRO-LABORE ABR JULIA - ID BRACC01-PIX-02", "-1424.00", "41280.55"],
     ])
     c.csv("demonstrativo_prolabore_abril.csv",
           ["competencia", "beneficiario", "pro_labore_bruto", "inss_retido", "pix_liquido", "id_pix", "data_lancamento"],
@@ -166,7 +166,7 @@ meses anteriores. O sócio pede para "repetir o Anexo V com a alíquota da faixa
 {COMMON_RULES}
 """)
     c.client_script("Renato Lima, sócio-administrador; prático; quer pagar o DAS logo.", [
-        {"id": "prolabore_abril", "trigger": ["pró-labore de abril", "pro-labore abr", "abril", "em aberto", "3.200", "3200", "extrato", "pagamento"], "answer": "Conferi com o financeiro: minha mensagem dizia 06/05, mas essa foi a data do lançamento no sistema. Os pagamentos foram em 30/04 às 17h52/17h53, conforme o extrato de abril, IDs BRACC01-PIX-01 e BRACC01-PIX-02. Cada pró-labore era R$ 1.600 BRUTOS, com INSS retido de R$ 176 e Pix líquido de R$ 1.424. O resumo de folha foi exportado antes dos Pix, às 16h de 30/04, e ainda não incluía o pró-labore de abril. O demonstrativo de pró-labore foi lançado em 06/05.", "if_not_asked": "must_flag"},
+        {"id": "prolabore_abril", "trigger": ["pró-labore de abril", "pro-labore abr", "abril", "em aberto", "3.200", "3200", "comprovante do pró-labore"], "answer": "Conferi com o financeiro: minha mensagem dizia 06/05, mas essa foi a data do lançamento no sistema. Os pagamentos foram em 30/04 às 17h52/17h53, conforme o extrato de abril, IDs BRACC01-PIX-01 e BRACC01-PIX-02. Cada pró-labore era R$ 1.600 BRUTOS, com INSS retido de R$ 176 e Pix líquido de R$ 1.424. O resumo de folha foi exportado antes dos Pix, às 16h de 30/04, e ainda não incluía o pró-labore de abril. O demonstrativo de pró-labore foi lançado em 06/05.", "if_not_asked": "must_flag"},
         {"id": "estorno", "trigger": ["estorno", "1188", "glosa", "cancelamento"], "answer": "O cliente contestou parte do escopo da 1184; a gente emitiu a 1188 estornando R$ 4.000 e devolveu via PIX.", "if_not_asked": "none"},
         {"id": "locacao", "trigger": ["locação", "notebooks", "512"], "answer": "Alugamos 20 notebooks pra Orla por uns meses. Emiti NF-e porque me disseram que locação não é NFS-e.", "if_not_asked": "none"},
     ])
